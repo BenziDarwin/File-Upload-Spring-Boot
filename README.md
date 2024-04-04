@@ -1,0 +1,1 @@
+[![Maven Package](https://github.com/BenziDarwin/File-Upload-Spring-Boot/actions/workflows/maven-publish.yml/badge.svg)](https://github.com/BenziDarwin/File-Upload-Spring-Boot/actions/workflows/maven-publish.yml)
