@@ -7,6 +7,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +35,30 @@ public class FileHandlerService implements StorageService  {
 
 		this.rootLocation = Paths.get(properties.getLocation());
 	}
+
+	@Override
+	public void bulkStore(MultipartFile[] files) throws Exception {
+        List<String> fileNames = new ArrayList<>();
+        try {
+            for (MultipartFile file : files) {
+                if (file.isEmpty()) {
+                    throw new Exception("Failed to store empty file.");
+                }
+                Path destinationFile = this.rootLocation.resolve(Paths.get(file.getOriginalFilename()))
+                        .normalize().toAbsolutePath();
+                if (!destinationFile.getParent().equals(this.rootLocation.toAbsolutePath())) {
+                    // This is a security check
+                    throw new Exception("Cannot store file outside current directory.");
+                }
+                try (InputStream inputStream = file.getInputStream()) {
+                    Files.copy(inputStream, destinationFile, StandardCopyOption.REPLACE_EXISTING);
+                }
+                fileNames.add(file.getOriginalFilename());
+            }
+        } catch (Exception e) {
+            throw new Exception("Failed to store files.", e);
+        }
+    }
 
 	@Override
 	public void store(MultipartFile file) throws Exception {

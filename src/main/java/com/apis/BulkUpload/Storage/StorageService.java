@@ -11,6 +11,8 @@ public interface StorageService {
 
 	void store(MultipartFile file) throws Exception;
 
+	void bulkStore(MultipartFile[] files) throws Exception;
+
 	Stream<Path> loadAll() throws Exception;
 
 	Path load(String filename) throws Exception;
