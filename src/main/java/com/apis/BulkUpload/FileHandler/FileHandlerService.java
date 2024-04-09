@@ -1,5 +1,6 @@
 package com.apis.BulkUpload.FileHandler;
 
+import io.github.pixee.security.Filenames;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -44,7 +45,7 @@ public class FileHandlerService implements StorageService  {
                 if (file.isEmpty()) {
                     throw new Exception("Failed to store empty file.");
                 }
-                Path destinationFile = this.rootLocation.resolve(Paths.get(file.getOriginalFilename()))
+                Path destinationFile = this.rootLocation.resolve(Paths.get(Filenames.toSimpleFileName(file.getOriginalFilename())))
                         .normalize().toAbsolutePath();
                 if (!destinationFile.getParent().equals(this.rootLocation.toAbsolutePath())) {
                     // This is a security check
@@ -53,7 +54,7 @@ public class FileHandlerService implements StorageService  {
                 try (InputStream inputStream = file.getInputStream()) {
                     Files.copy(inputStream, destinationFile, StandardCopyOption.REPLACE_EXISTING);
                 }
-                fileNames.add(file.getOriginalFilename());
+                fileNames.add(Filenames.toSimpleFileName(file.getOriginalFilename()));
             }
         } catch (Exception e) {
             throw new Exception("Failed to store files.", e);
@@ -67,7 +68,7 @@ public class FileHandlerService implements StorageService  {
 				throw new Exception("Failed to store empty file.");
 			}
 			Path destinationFile = this.rootLocation.resolve(
-					Paths.get(file.getOriginalFilename()))
+					Paths.get(Filenames.toSimpleFileName(file.getOriginalFilename())))
 					.normalize().toAbsolutePath();
 			if (!destinationFile.getParent().equals(this.rootLocation.toAbsolutePath())) {
 				// This is a security check

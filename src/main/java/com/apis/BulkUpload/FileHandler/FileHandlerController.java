@@ -1,5 +1,6 @@
 package com.apis.BulkUpload.FileHandler;
 
+import io.github.pixee.security.Filenames;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -48,7 +49,7 @@ public class FileHandlerController {
     @PostMapping("/")
     public ResponseEntity<String> handleFileUpload(@RequestParam("file") MultipartFile file) throws Exception {
         storageService.store(file);
-        return ResponseEntity.ok().body("You successfully uploaded " + file.getOriginalFilename() + "!");
+        return ResponseEntity.ok().body("You successfully uploaded " + Filenames.toSimpleFileName(file.getOriginalFilename()) + "!");
     }
 
 	@PostMapping("/bulk")
